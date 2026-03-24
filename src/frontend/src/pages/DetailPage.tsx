@@ -8,6 +8,7 @@ import {
   Bookmark,
   Calendar,
   Clock,
+  ExternalLink,
   PlayCircle,
   Star,
   Tv,
@@ -81,6 +82,8 @@ export function DetailPage() {
       add(anime);
     }
   };
+
+  const crunchyrollSearchUrl = `https://www.crunchyroll.com/search?q=${encodeURIComponent(title)}`;
 
   return (
     <div className="min-h-screen" data-ocid="detail.page">
@@ -295,6 +298,20 @@ export function DetailPage() {
                   Watch Trailer
                 </a>
               )}
+              <a
+                href={crunchyrollSearchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all hover:opacity-90"
+                style={{
+                  background: "#f47521",
+                  color: "#ffffff",
+                }}
+                data-ocid="detail.crunchyroll_button"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Watch on Crunchyroll
+              </a>
               <button
                 type="button"
                 onClick={handleMyList}
@@ -321,6 +338,41 @@ export function DetailPage() {
             </div>
           </div>
         </motion.div>
+
+        {anime.trailer?.youtube_id && (
+          <motion.section
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.05 }}
+            className="mb-12"
+            data-ocid="detail.section"
+          >
+            <h2
+              className="text-xl font-bold mb-4"
+              style={{ color: "oklch(var(--foreground))" }}
+            >
+              Official Trailer
+            </h2>
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{ background: "oklch(var(--surface))" }}
+            >
+              <div
+                className="relative w-full"
+                style={{ paddingBottom: "56.25%" }}
+              >
+                <iframe
+                  src={`https://www.youtube.com/embed/${anime.trailer.youtube_id}`}
+                  title={`${title} — Official Trailer`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full rounded-xl"
+                  style={{ border: "none" }}
+                />
+              </div>
+            </div>
+          </motion.section>
+        )}
 
         {anime.synopsis && (
           <motion.section
